@@ -1,0 +1,94 @@
+{
+	"info": {
+		"_postman_id": "4044371a-c1e4-4001-bee6-5233dacaf40b",
+		"name": "OpenWeather",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24653330",
+		"_collection_link": "https://testing-3226.postman.co/workspace/Learning~4fb3be1d-4c41-43e6-b10c-dac5bb8eb2b8/collection/24653330-4044371a-c1e4-4001-bee6-5233dacaf40b?action=share&source=collection_link&creator=24653330"
+	},
+	"item": [
+		{
+			"name": "weather",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"\r",
+							"pm.test(\"response to have main\", function() {\r",
+							"    pm.expect(jsonData.weather[0]).to.have.property(\"main\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 200ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"\r",
+							"pm.test(\"Weather array contains at least one object with non-empty main and description fields\", function () {\r",
+							"    pm.expect(jsonData.weather).to.be.an('array').that.is.not.empty;\r",
+							"\r",
+							"    const hasValidWeather = jsonData.weather.some(weatherItem => \r",
+							"        weatherItem.main && weatherItem.main.length > 0 &&\r",
+							"        weatherItem.description && weatherItem.description.length > 0\r",
+							"    );\r",
+							"\r",
+							"    pm.expect(hasValidWeather).to.be.true;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Temperature values must be valid numbers\", function () {\r",
+							"    const temperatureFields = ['temp', 'feels_like', 'temp_min', 'temp_max'];\r",
+							"    temperatureFields.forEach(field => {\r",
+							"        pm.expect(jsonData.main[field]).to.be.a('number').and.to.not.be.NaN;\r",
+							"    });\r",
+							"});\r",
+							"\r",
+							"pm.test(\"The country code in the sys object must be a non-empty string\", function () {\r",
+							"    pm.expect(jsonData).to.be.an('object');\r",
+							"    pm.expect(jsonData.sys).to.exist;\r",
+							"    pm.expect(jsonData.sys.country).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"Country code should not be empty\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.openweathermap.org/data/2.5/weather?q=delhi&appid=c76e6d1f2e6af75573c66176b1ad5627",
+					"protocol": "https",
+					"host": [
+						"api",
+						"openweathermap",
+						"org"
+					],
+					"path": [
+						"data",
+						"2.5",
+						"weather"
+					],
+					"query": [
+						{
+							"key": "q",
+							"value": "delhi"
+						},
+						{
+							"key": "appid",
+							"value": "c76e6d1f2e6af75573c66176b1ad5627"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
